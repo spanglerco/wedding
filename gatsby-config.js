@@ -6,5 +6,24 @@
 
 module.exports = {
   /* Your site config here */
-  plugins: [],
+  plugins: [
+    {
+      resolve: 'gatsby-theme-material-ui',
+      options: {
+        webFontsConfig: {
+          fonts: {
+            google: [
+              {
+                family: 'Euphoria Script',
+                variants: ['300', '400', '500'],
+              },
+              {
+                family: 'Montserrat'
+              }
+            ],
+          },
+        },
+      },
+    }
+  ],
 }
