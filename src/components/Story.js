@@ -22,7 +22,7 @@ export default function Story(props) {
   return (
     <div style={storyStyle}>
       <img style={imgStyle} src={source} alt="" />
-      <p style={textStyle}>Once upon a time, Christine fell in love with a man named Paul Spangler.</p>
+      <p style={textStyle}>{props.text}</p>
     </div>
   );
 };
