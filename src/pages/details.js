@@ -28,7 +28,7 @@ export default function Details() {
       <div style={detailsStyle}>
         <div>May 8, 2021</div>
         <div>2:00 pm</div>
-        <div>Attire: business casual</div>
+        <div>Attire: casual, no jeans please</div>
         <div>Reception with heavy hors d'oeuvres to follow in ballroom</div>
         <br />
         <div>Smith Family Chapel at Riverbend Church</div>

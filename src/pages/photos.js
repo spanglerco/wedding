@@ -17,7 +17,7 @@ export default function Photos() {
 
   return (
     <CardLayout>
-      <Header headerText="Look how cute we are" />
+      <Header headerText="Look how cute we are" subText="photo credit - Christina Hastings; dress credit - Old Navy; man credit - God" />
       <Nav activePage="photos" />
       <div style={contentStyle}>
         <img style={imgStyle} src="photo/Paul-Christine-17.jpg" alt="" />
