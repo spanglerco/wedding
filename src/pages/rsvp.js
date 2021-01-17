@@ -21,7 +21,8 @@ export default function RSVP() {
       <Header headerText="Let us know if you're coming" />
       <Nav activePage="rsvp" />
       <div style={divStyle}>
-        <Input style={inputStyle} placeholder="enter your name" />
+        <Input style={inputStyle} placeholder="first name" />
+        <Input style={inputStyle} placeholder="last name" />
         <Button style={inputStyle} variant="contained" color="primary">Find my invite!</Button>
       </div>
     </CardLayout>
