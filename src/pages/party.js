@@ -15,7 +15,7 @@ export default function Party() {
   const catherineText = 'Catherine is the youngest and most wholesome Karas. The joke always was that she and Christine are the same person until she ruined it by getting braces, but now Christine is getting married, so it must be even. She is a medical assistant in her favorite city, Duluth, Minnesota.';
   const masonText = 'Mason is another good friend whom Paul met in high school. They bonded over cross country, youth symphony, and (you guessed it) doing whatever friends do. Mason moved from the homeland of Georgia to Columbus, Ohio, where he works for a drug company.';
   const zouaText = 'Zoua is Christine\'s spiritual accountability buddy and best good pal from church during college. She is opposite Christine in many ways, which helps both of them to learn and grow. Zoua is a massage therapist with her own practice, Twin Cities Thrive, in St. Paul, Minnesota.';
-  const chimaText = 'Although Paul and Chima went to high school together, they really became friends in college. He\'s always on Paul\'s list of people to visit when he goes home to Georgia, and is about to be educated to the highest degree of the entire party. Chima lives in Macon, Georgia, where he is a nurse.';
+  const chimaText = 'Although Paul and Chima went to high school together, they really became friends in college. He\'s always on Paul\'s list of people to visit when he goes home to Georgia, and is about to be educated to the highest degree of the entire party. Chima lives in Augusta, Georgia, where he is levelling up his nursing skills.';
 
   return (
     <CardLayout>
