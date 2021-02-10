@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import Nav from '../components/Nav';
 import CardLayout from '../components/CardLayout';
-import { Button, Input } from '@material-ui/core';
+import { Button, Input, FormControlLabel, Checkbox } from '@material-ui/core';
 
 export default function RSVP() {
   const divStyle = {
@@ -11,9 +11,21 @@ export default function RSVP() {
     alignItems: 'center'
   };
 
+  const rsvpFormBodyStyle = {
+    display: 'block',
+    margin: 10,
+    width: 210
+  };
+
   const inputStyle = {
     fontFamily: 'Glegoo',
     margin: 10
+  };
+
+  const familyNameStyle = {
+    fontFamily: 'Euphoria Script',
+    fontSize: 28,
+    marginTop: 28
   };
 
   const firstNameRef = useRef(null);
@@ -23,15 +35,28 @@ export default function RSVP() {
   let [invite, setInvite] = useState({
     allowChildren: false,
     familyName: '',
-    maxAdults: 0,
-    maxChildren: 0
+    invited: [],
+    maxAdults: 0
   });
+
+  let [names, setNames] = useState([]);
+  let [additional, setAdditional] = useState([]);
+  useEffect(() => {
+    setNames(invite.invited.map(i => i.firstName));
+
+    const extras = invite.maxAdults - invite.invited.length;
+    if (extras > 0) {
+      setAdditional([Array.from(Array(extras).keys())]);
+    } else {
+      setAdditional([]);
+    }
+  }, [invite]);
 
   const findInvite = (event) => {
     event.preventDefault();
     const firstName = firstNameRef.current.firstElementChild.value;
     const lastName = lastNameRef.current.firstElementChild.value;
-    const url = `https://spanglerwedding.azurewebsites.net/api/Invitations?firstName=${firstName}&lastName=${lastName}`;
+    const url = `https://spanglerwedding.azurewebsites.net/invitations?firstName=${firstName}&lastName=${lastName}`;
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -62,11 +87,29 @@ export default function RSVP() {
           <Button type="submit" style={inputStyle} variant="contained" color="primary">Find my invite!</Button>
         </form>
       </div>
-      <div style={foundInvite ? {display: 'block'} : {display: 'none'}}>
-        <p>{invite.familyName}</p>
+      <div style={foundInvite ? divStyle : {display: 'none'}}>
+        <div style={familyNameStyle}>Invitation for {invite.familyName}</div>
         <form style={divStyle} onSubmit={submitRSVP}>
-          <p>Adults: up to {invite.maxAdults}</p>
-          <div>{invite.allowChildren ? `Kids: up to ${invite.maxChildren}` : ''}</div>
+          <div style={rsvpFormBodyStyle}>
+            {names.map(name => (
+              <FormControlLabel
+                key={name}
+                control={
+                  <Checkbox
+                    // checked={state.checkedB}
+                    // onChange={handleChange}
+                    name="checkedB"
+                    color="primary"
+                  />
+                }
+                label={name}
+              />)
+            )}
+            {additional.map((v, index) => (
+              <Input key={index} placeholder="Additional attendee"></Input>
+            ))}
+          </div>
+          <Button type="submit" style={inputStyle} variant="contained" color="primary">Give cake pls!</Button>
         </form>
       </div>
     </CardLayout>
