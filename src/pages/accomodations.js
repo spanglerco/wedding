@@ -8,7 +8,7 @@ export default function Accomodations() {
     <CardLayout>
       <Header headerText="where 2 sleep" />
       <Nav activePage="accomodations" />
-      <p class="body-font">idk probably a hotel? Holiday Inn Express?</p>
+      <p className="body-font">idk probably a hotel? Holiday Inn Express?</p>
     </CardLayout>
   );
 };
