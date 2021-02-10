@@ -6,6 +6,9 @@ const theme = createMuiTheme({
       'Euphoria Script',
       'cursive'
     ].join(','),
+    body1: {
+      fontFamily: 'Glegoo'
+    }
   }
 });
 
