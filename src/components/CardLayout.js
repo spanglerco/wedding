@@ -34,12 +34,12 @@ export default function Layout({ children }) {
 
   return (
     <div style={divStyle}>
-      <img style={topImgStyle} src="photo/flowers-top.jpg" alt="some flowers" width="100%" />
+      <img style={topImgStyle} src="/photo/flowers-top.jpg" alt="some flowers" width="100%" />
       <Paper style={cardStyle}>
         {children}
       </Paper>
       <a style={attributionStyle} href='https://www.freepik.com/photos/background'>Background photo created by freepik - www.freepik.com</a>
-      <img style={bottomImgStyle} src="photo/flowers-bottom.jpg" alt="some more flowers" width="100%" />
+      <img style={bottomImgStyle} src="/photo/flowers-bottom.jpg" alt="some more flowers" width="100%" />
     </div>
   );
 }
