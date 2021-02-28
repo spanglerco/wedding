@@ -38,7 +38,10 @@ export default function Layout({ children }) {
       <Paper style={cardStyle}>
         {children}
       </Paper>
-      <a style={attributionStyle} href='https://www.freepik.com/photos/background'>Background photo created by freepik - www.freepik.com</a>
+      <div style={attributionStyle}>
+        <a href="https://www.vecteezy.com/free-vector/glass">Glass Vectors by Vecteezy</a>&nbsp;
+        <a href='https://www.freepik.com/photos/background'>Background photo created by freepik - www.freepik.com</a>
+      </div>
       <img style={bottomImgStyle} src="/photo/flowers-bottom.jpg" alt="some more flowers" width="100%" />
     </div>
   );
