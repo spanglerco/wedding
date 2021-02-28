@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Story(props) {
   const storyStyle = {
@@ -18,11 +18,22 @@ export default function Story(props) {
     textAlign: 'justify'
   };
 
+  let [paragraphs, setParagraphs] = useState([]);
+  useEffect(() => {
+    if (!Array.isArray(props.text)) {
+      setParagraphs([props.text]);
+    } else {
+      setParagraphs(props.text);
+    }
+  }, [props.text]);
+
   const source = `/photo/${props.src}`;
   return (
     <div style={storyStyle}>
       <img style={imgStyle} src={source} alt="" />
-      <p style={textStyle}>{props.text}</p>
+      {paragraphs.map((text, index) => (
+        <p key={`${index}`} style={textStyle}>{text}</p>
+      ))}
     </div>
   );
 };
