@@ -32,14 +32,16 @@ export default function RSVP() {
     paddingTop: 20
   };
 
-  const firstNameRef = useRef(null);
-  const lastNameRef = useRef(null);
   const rsvpFormRef = useRef(null);
   const plusOneRef = useRef(null);
   const emailRef = useRef(null);
   const commentsRef = useRef(null);
+  let [firstName, setFirstName] = useState('');
+  let [lastName, setLastName] = useState('');
   let [error, setError] = useState('');
   let [foundInvite, setFoundInvite] = useState(false);
+  let [loading, setLoading] = useState('');
+  let [n, setN] = useState(0);
   let [invite, setInvite] = useState({
     allowChildren: false,
     familyName: '',
@@ -49,11 +51,12 @@ export default function RSVP() {
 
   let [names, setNames] = useState([]);
   let [additional, setAdditional] = useState(false);
-  let accepts = [];
+  let [accepts, setAccepts] = useState([]);
   useEffect(() => {
+    setN(n + 1);
     setNames(invite.invited);
     rsvpFormRef.current.reset();
-    accepts = [];
+    setAccepts([]);
 
     const extras = invite.maxAdults - invite.invited.length;
     if (extras > 0) {
@@ -65,20 +68,25 @@ export default function RSVP() {
 
   const findInvite = (event) => {
     event.preventDefault();
-    const firstName = firstNameRef.current.firstElementChild.value;
-    const lastName = lastNameRef.current.firstElementChild.value;
+    setLoading('Finding your invitation...');
     const url = `https://spanglerwedding.azurewebsites.net/invitations?firstName=${firstName}&lastName=${lastName}`;
     fetch(url)
       .then(response => response.json())
       .then(data => {
+        setLoading('');
         if (data.status && data.status !== 200) {
-          setError('We could not find your invite. Please guess what we think your name is :)');
+          setError('We could not find your invitation. Please try another spelling; we are engineers, not English majors.');
           setFoundInvite(false);
         } else {
           setError('');
           setFoundInvite(true);
           setInvite(data)
         }
+      })
+      .catch(() => {
+        setError('Oops, you caught us at a bad time. Our RSVP system isn\'t working right now. Please try again later or email us at wedding.spanglerco.com.');
+        setFoundInvite(false);
+        setLoading('');
       });
   };
 
@@ -86,52 +94,83 @@ export default function RSVP() {
     const index = Number.parseInt(event.currentTarget.id);
     const person = invite.invited[index];
     if (event.currentTarget.checked) {
-      accepts.push(person);
+      setAccepts(accepts.concat(person));
     } else {
-      accepts = accepts.filter(x => x.firstName !== person.firstName || x.lastName !== person.lastName);
+      setAccepts(accepts.filter(x => x.firstName !== person.firstName || x.lastName !== person.lastName));
     }
   };
 
   const submitRSVP = (event) => {
     event.preventDefault();
     if (plusOneRef.current && plusOneRef.current.firstElementChild.value) {
-      accepts.push({
+      setAccepts(accepts.concat({
         firstName: plusOneRef.current.firstElementChild.value,
         lastName: '',
         isChild: false
-      });
+      }));
     }
     const rsvp = {
-      firstName: firstNameRef.current.firstElementChild.value,
-      lastName: lastNameRef.current.firstElementChild.value,
+      firstName: firstName,
+      lastName: lastName,
       numAdults: accepts.filter(x => x.isChild === false).length,
       numChildren: accepts.filter(x => x.isChild).length,
       comments: commentsRef.current.firstElementChild.value,
       email: emailRef.current.firstElementChild.value,
       attendees: accepts.map(x => `${x.firstName} ${x.lastName}`.trim())
     };
-    console.log(rsvp);
+    
+    fetch('https://spanglerwedding.azurewebsites.net/rsvps', {
+      method: 'POST',
+      body: JSON.stringify(rsvp),
+      headers: { 
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+    .then(data => {
+      setLoading('');
+      if (data.status && data.status !== 204) {
+        setError(`Oh dear, it didn't work. That's awkward. Click "Find my invite" to try again, or email us at wedding@spanglerco.com.`);
+        setFoundInvite(false);
+      } else {
+        setError('');
+        setLoading('RSVP received! Thank you for responding.');
+        setFoundInvite(false);
+      }
+    })
+    .catch(() => {
+      setError('Oops, you caught us at a bad time. Our RSVP system isn\'t working right now. Please try again later or email us at wedding.spanglerco.com.');
+      setFoundInvite(false);
+      setLoading('');
+    });
   };
 
   return (
     <CardLayout>
       <Header headerText="Let us know if you're coming" />
       <Nav activePage="rsvp" />
-      <div>
+      <div style={foundInvite ? {display: 'none'} : divStyle}>
         <form style={divStyle} onSubmit={findInvite}>
-          <Input ref={firstNameRef} style={inputStyle} placeholder="first name" />
-          <Input ref={lastNameRef} style={inputStyle} placeholder="last name" />
+          <Input onChange={(event) => setFirstName(event.target.value)} style={inputStyle} placeholder="First name" />
+          <Input onChange={(event) => setLastName(event.target.value)} style={inputStyle} placeholder="Last name" />
+          <Button type="submit"
+            style={inputStyle}
+            disabled={!firstName || !lastName}
+            variant="contained"
+            color="primary">
+              Find my invitation
+          </Button>
           <div>{error}</div>
-          <Button type="submit" style={inputStyle} variant="contained" color="primary">Find my invite!</Button>
+          <div>{loading}</div>
         </form>
       </div>
       <div style={foundInvite ? divStyle : {display: 'none'}}>
         <div style={familyNameStyle}>Invitation for {invite.familyName}</div>
+        <div style={inputStyle}>Please check the boxes next to those who will attend.</div>
         <form ref={rsvpFormRef} style={divStyle} onSubmit={submitRSVP}>
           <div style={rsvpFormBodyStyle}>
             {names.map((name, index) => (
               <FormControlLabel
-                key={`${name.firstName}${name.lastName}${index}`}
+                key={`${name.firstName}${name.lastName}${n}`}
                 control={
                   <Checkbox
                     id={`${index}`}
@@ -156,7 +195,7 @@ export default function RSVP() {
               </FormControl>
             </div>
           </div>
-          <Button type="submit" style={inputStyle} variant="contained" color="primary">Give cake pls!</Button>
+          <Button type="submit" disabled={!firstName || !lastName} style={inputStyle} variant="contained" color="primary">Submit RSVP</Button>
         </form>
       </div>
     </CardLayout>
