@@ -31,7 +31,7 @@ export default function Accomodations() {
         <br />
         <div>Holiday Inn Express & Suites Austin NW - Arboretum Area</div>
         <div>10711 Research Blvd, Austin, TX 78759</div>
-        <iframe style={iframeStyle} src="https://www.google.com/maps/d/u/0/embed?mid=1QdrX61stFN8cFaNnkMNV-QT5UooYym54" width="640" height="480"></iframe>
+        <iframe style={iframeStyle} src="https://www.google.com/maps/d/u/0/embed?mid=1QdrX61stFN8cFaNnkMNV-QT5UooYym54" width="640" height="480" frameBorder="0"></iframe>
         <br />
       </div>
     </CardLayout>
