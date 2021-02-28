@@ -7,7 +7,7 @@ export default function Details() {
   const detailsStyle = {
     fontFamily: 'Glegoo',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 18,
     lineHeight: 1.7
   };
 
