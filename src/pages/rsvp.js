@@ -33,11 +33,11 @@ export default function RSVP() {
   };
 
   const rsvpFormRef = useRef(null);
-  const plusOneRef = useRef(null);
   const emailRef = useRef(null);
   const commentsRef = useRef(null);
   let [firstName, setFirstName] = useState('');
   let [lastName, setLastName] = useState('');
+  let [plusOne, setPlusOne] = useState('');
   let [error, setError] = useState('');
   let [foundInvite, setFoundInvite] = useState(false);
   let [loading, setLoading] = useState('');
@@ -57,6 +57,7 @@ export default function RSVP() {
     setNames(invite.invited);
     rsvpFormRef.current.reset();
     setAccepts([]);
+    setPlusOne('');
 
     const extras = invite.maxAdults - invite.invited.length;
     if (extras > 0) {
@@ -102,23 +103,25 @@ export default function RSVP() {
 
   const submitRSVP = (event) => {
     event.preventDefault();
-    if (plusOneRef.current && plusOneRef.current.firstElementChild.value) {
-      setAccepts(accepts.concat({
-        firstName: plusOneRef.current.firstElementChild.value,
+    const attendees = accepts.slice();
+    if (plusOne) {
+      attendees.push({
+        firstName: plusOne,
         lastName: '',
         isChild: false
-      }));
+      });
     }
+
     const rsvp = {
       firstName: firstName,
       lastName: lastName,
-      numAdults: accepts.filter(x => x.isChild === false).length,
-      numChildren: accepts.filter(x => x.isChild).length,
+      numAdults: attendees.filter(x => x.isChild === false).length,
+      numChildren: attendees.filter(x => x.isChild).length,
       comments: commentsRef.current.firstElementChild.value,
       email: emailRef.current.firstElementChild.value,
-      attendees: accepts.map(x => `${x.firstName} ${x.lastName}`.trim())
+      attendees: attendees.map(x => `${x.firstName} ${x.lastName}`.trim())
     };
-    
+
     fetch('https://spanglerwedding.azurewebsites.net/rsvps', {
       method: 'POST',
       body: JSON.stringify(rsvp),
@@ -182,7 +185,7 @@ export default function RSVP() {
               />)
             )}
             {additional && (
-              <Input ref={plusOneRef} placeholder="Additional attendee"></Input>
+              <Input onChange={(event) => setPlusOne(event.target.value)} placeholder="Additional attendee"></Input>
             )}
             <div style={optionalFieldStyle}>
               <FormControl>
